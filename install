@@ -1,0 +1,118 @@
+#!/bin/bash
+
+#main.sh
+
+#declare global variables
+USERDIR=/usr/local/bin
+MANPAGEDIR=/usr/local/share/man/man1
+TMPDIR=/Users/$USER/tmp
+USERSCRIPTS=/Users/$USER/scripts
+USRBIN=$(ls -la /usr/local | grep bin | grep -v sbin | awk '{print $3,$4}')
+USRSHARE=$(ls -la /usr/local | grep share | awk '{print $3,$4}')
+FILE1=$USERDIR/status
+MANPAGE=$MANPAGEDIR/status.1
+ZOOMCHECK=$USERSCRIPTS/zoomcheck.sh
+
+#start script by checking if the permissions on the necessary install folders exist. If so, dive into the meat of the script. If not, exit and report how to make a SNOW ticket.
+if [[ ($(echo $USRBIN) == "$USER admin") && ($(echo $USRSHARE) == "$USER admin") ]]; then
+	#directory creation
+	#check if user temp directory exists. if not, create directory ~/tmp
+	if [ -d $TMPDIR ]; then
+		echo "$TMPDIR already exists, skipping"
+		sleep 2
+	else
+		echo "$TMPDIR does not exist, creating"
+		sleep 2
+		mkdir $TMPDIR
+	fi
+
+	sleep 2
+
+	#check if user scripts directory exists. if not, create directory ~/scripts
+	if [ -d $USERSCRIPTS ]; then
+		echo "$USERSCRIPTS already exists, skipping"
+		sleep 2
+	else
+		echo "$USERSCRIPTS does not exist, creating"
+		sleep 2
+		mkdir $USERSCRIPTS
+	fi
+
+	sleep 2
+
+	#check if manpage directory exists already. if not, create directory /usr/local/share/man/man1
+	if [ -d $MANPAGEDIR ]; then
+		echo "$MANPAGEDIR already exists, skipping"
+		sleep 2
+	else
+		echo "$MANPAGEDIR does not exist, creating"
+		sleep 2
+		mkdir $MANPAGEDIR
+	fi
+
+	sleep 2
+
+	#create zoomstatus.txt file for zoomcheck.sh script
+	echo "Creating zoomstatus.txt file. This is a placeholder file which is checked in the zoomcheck.sh script for a true or false value"
+	sleep 2
+	touch ~/tmp/zoomstatus.txt
+
+	sleep 2
+
+	#check if script file and manpage exists already. if not, copy statuslight script into /usr/local/bin directory. copy manpage into /usr/local/share/man/man1
+	if [ -e $FILE1 ] || [ -e $ZOOMCHECK ] || [ -e $MANPAGE ]; then
+		echo "One or more files already exist on this machine, skipping those files"
+		sleep 2
+	else	
+		echo "Copying manpage, status command, and zoomcheck.sh to directories"
+		cp /Volumes/statuslight/content/status.1 $MANPAGEDIR
+		cp /Volumes/statuslight/scripts/status $USERDIR
+		cp /Volumes/statuslight/scripts/zoomcheck.sh $USERSCRIPTS
+		sleep 2
+	fi
+
+	sleep 2
+
+	#crontab echo for the automation of checking if zoom/webex are running
+	echo "Creating crontab entry to run the zoomcheck.sh script. This checks if Zoom or Webex is running and changes the status light color accordingly"
+
+	(crontab -l 2>/dev/null; echo '* * * * * /bin/bash /Users/$USER/scripts/zoomcheck.sh > /dev/null 2>&1') | crontab -
+
+	sleep 2
+
+	#create aliases and echo them into the .bash_profile for the individual user
+
+	echo "Creating bash profile aliases for ease of use. Please check your .bash_profile after the install for all of the available aliases that were created"
+
+	printf "alias red='status @solid > /dev/null 2>&1; sleep 1; status red > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias yellow='status @solid > /dev/null 2>&1; sleep 1; status yellow > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias green='status @solid > /dev/null 2>&1; sleep 1; status green > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias blue='status blue > /dev/null 2>&1;sleep 1;status @blink >/dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias blink='status @blink > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias solid='status @solid > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias wheel='status @wheel > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias ramp='status @ramp > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias beat='status @beat > /dev/null 2>&1'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+	printf "alias brightness='for i in {0}; do read -p \"Please enter a numeric value from 0-100: \" brightness; wait; status %%\$brightness > /dev/null 2>&1; done'" >> /Users/$USER/.bash_profile
+	printf "\n">> /Users/$USER/.bash_profile
+
+	cd
+	#refresh the bash profile to make the aliases immediately accessible
+	. ~/.bash_profile
+
+	sleep 2
+
+	echo "For more information about the status command and its arguments, please type 'man status'"
+
+else
+	echo "Please create a SNOW ticket to change ownership of the /usr/local/bin and /usr/local/share directories. The permissions should be \"drwxrwxr-x\" or \"chmod 775\" and the username/group should be: \""$USER admin"\""
+fi

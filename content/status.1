@@ -1,0 +1,44 @@
+.TH STATUS 1 [Status\ Manpage] [Created\&:\ October\ 27,\ 2019] [Status\ Manpage]
+.SH NAME
+\fBstatus \fR- a status light for identifying availability
+.SH SYNOPSIS
+.B status
+[\fBcolorname\fR]
+[\fB#\fR \fIhexcode\fR]
+[\fB%\fR number 0\-100\fR]
+[\fB\@\fR \fImode\fR]
+.SH DESCRIPTION
+.B status
+\-\-changes color of status light to show availability
+.SH OPTIONS
+.TP
+.BR "colorname "example\&:\fI\ status\ red\fR
+\-\-red, blue, green, yellow, and black are already programmed in\. for any other colors\, see "#hexcode"
+.TP
+.BR "#hexcode "example\&:\fI\ status\ "#0000FF" \fR
+\-\-hexcode\ color\ can\ be\ in\ single\ or\ double\ quotes\fR
+.TP
+.BR %number\ \<0\-100\>\fR\ example\&:\fI\ status\ %50\fR
+\-\-set\ the\ brightness\ of\ the\ LED\ as\ a\ percentage\fR
+.TP
+.BR \@solid\fR\ example\&:\fI\ status\ \@solid\fR
+\-\-currently\ specified\ color\ turns\ solid\ on\ the\ LED\fR
+.TP
+.BR \@blink\fR\ example\&:\fI\ status\ \@blink\fR
+\-\-flashes the current color on and off at a 0\.4 second interval
+.TP
+.BR \@ramp\fR\ example\&:\fI\ status\ \@ramp\fR
+\-\-slowly cycle from brightest to darkest and back
+.TP
+.BR \@wheel\fR\ example\&:\fI\ status\ \@wheel\fR
+\-\-cycle through the color wheel
+.TP
+.BR \@splunk\fR\ example\&:\fI\ status\ \@splunk\fR
+\-\-flash the morse code for "splunk" in the currently chosen color
+.TP
+.BR \@beat\fR\ example\&:\fI\ status\ \@beat\fR
+\-\-flash the LED in a "heartbeat" in the currently chosen color
+.SH HISTORY
+.IP This\ program\ has\ been\ adapted\ to\ be\ used\ with\ the\ Adafruit\ Trinket\ m0\ microcontroller\ for\ use\ in\ an\ office\ environment\.\ The\ original\ project\ can\ be\ accessed\ at\ \fIhttps://learn.adafruit.com/AT-Hand-Raiser/
+.SH AUTHORS
+.IP Original\ authors\ of\ the\ Adafruit\ Trinket\ m0\ Hand-raiser\ circuit\ python\ code\ are\ Bill\ Binko\ and\ Chris\ Young.\ This\ manual\ page\ was\ written\ for\ macOSX\ by\ Hogan\ Keyser. Contributors\ include:\ Hogan\ Keyser,\ Beau\ LaChance,\ Renzo\ Cafferata,\ Ben\ Bryner,\ and\ Tim\ Bower.

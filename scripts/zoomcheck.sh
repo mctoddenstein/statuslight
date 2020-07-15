@@ -12,7 +12,7 @@ ACTIVEWEBEX=$(ps auwx | grep -Ei "webex" | grep -cv grep)
 ZOOMSTATUS=~/tmp/zoomstatus.txt
 
 #if the grep count from the ACTIVEZOOM global variable has a value equal to 2, then begin through the logic tree
-if [[ ($(echo $ACTIVEZOOM) == 2) || ($(echo $ACTIVEWEBEX) -gt 3) ]]; then 
+if [[ ($(echo $ACTIVEZOOM) -gt 2) || ($(echo $ACTIVEWEBEX) -gt 3) ]]; then
 	#if the concatenated output from the zoomstatus file is already set to "true", we do nothing
 	if [[ $(cat $ZOOMSTATUS) == 'true' ]]; then
 		:
@@ -21,7 +21,7 @@ if [[ ($(echo $ACTIVEZOOM) == 2) || ($(echo $ACTIVEWEBEX) -gt 3) ]]; then
 		echo "true" > $ZOOMSTATUS
 	fi
 #if the grep count from the ACTIVEZOOM global variable has a value less than 2, then begin through the logic tree
-elif [[ ($(echo $ACTIVEZOOM) -lt 2) || ($(echo $ACTIVEWEBEX) -le 3) ]]; then
+elif [[ ($(echo $ACTIVEZOOM) -le 2) || ($(echo $ACTIVEWEBEX) -le 3) ]]; then
 	#if the concatenated output from the zoomstatus file is already set to "true", we do nothing
 	if [[ $(cat $ZOOMSTATUS) == 'false' ]]; then
 		:
@@ -44,7 +44,7 @@ if [[ $(find /Users/$USER/tmp -name zoomstatus.txt -type f -cmin -2 -print) == "
 		status @solid
 		status yellow
 	#if the file has not been modified within the last two minutes, do nothing to allow for custom status light color changes
-	else 
+	else
 		:
 	fi
 fi
